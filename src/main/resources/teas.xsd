@@ -3,10 +3,7 @@
            xmlns:tns="http://herbaciarnia.example.com/teas"
            targetNamespace="http://herbaciarnia.example.com/teas">
 
-    <!-- ============================================================
-         TYP PROSTY #1: enum typów herbaty
-         Wymaganie: "co najmniej jeden własny typ prosty"
-         ============================================================ -->
+    <!-- Enum typów herbaty -->
     <xs:simpleType name="teaTypeEnum">
         <xs:restriction base="xs:string">
             <xs:enumeration value="GREEN"/>
@@ -18,17 +15,14 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <!-- ============================================================
-         TYP ZŁOŻONY #1: teaDto — model herbaty
-         Wymaganie: "co najmniej jeden własny typ złożony"
-         ============================================================ -->
+    <!-- Model herbaty -->
     <xs:complexType name="teaDto">
         <xs:sequence>
 
-            <!-- id: OPCJONALNE (nie podajemy przy dodawaniu) -->
-            <xs:element name="id" type="xs:decimal" minOccurs="0"/>
+            <!-- id opcjonalne -->
+            <xs:element minOccurs="0" name="id" type="xs:decimal"/>
 
-            <!-- name: OBOWIĄZKOWE, walidacja długości 2–100 znaków (reguła #1) -->
+            <!-- nazwa, 2-100 znaków -->
             <xs:element name="name">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
@@ -38,7 +32,7 @@
                 </xs:simpleType>
             </xs:element>
 
-            <!-- origin: OBOWIĄZKOWE, walidacja długości 2–60 znaków (reguła #2) -->
+            <!-- kraj pochodzenia, 2-60 znaków -->
             <xs:element name="origin">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
@@ -48,10 +42,10 @@
                 </xs:simpleType>
             </xs:element>
 
-            <!-- type: OBOWIĄZKOWE, walidacja enum (reguła #3) -->
+            <!-- typ herbaty, enum -->
             <xs:element name="type" type="tns:teaTypeEnum"/>
 
-            <!-- temperatureCelsius: OBOWIĄZKOWE, zakres 60–100 (reguła #4) -->
+            <!-- temperatura parzenia, 60-100°C -->
             <xs:element name="temperatureCelsius">
                 <xs:simpleType>
                     <xs:restriction base="xs:integer">
@@ -61,7 +55,7 @@
                 </xs:simpleType>
             </xs:element>
 
-            <!-- steepingTimeSeconds: OBOWIĄZKOWE, zakres 30–600 (reguła #5) -->
+            <!-- czas parzenia, 30-600s -->
             <xs:element name="steepingTimeSeconds">
                 <xs:simpleType>
                     <xs:restriction base="xs:integer">
@@ -71,16 +65,13 @@
                 </xs:simpleType>
             </xs:element>
 
-            <!-- notes: OPCJONALNE -->
-            <xs:element name="notes" type="xs:string" minOccurs="0"/>
+            <!-- notatki, opcjonalne -->
+            <xs:element minOccurs="0" name="notes" type="xs:string"/>
 
         </xs:sequence>
     </xs:complexType>
 
-    <!-- ============================================================
-         TYP ZŁOŻONY #2: brewingParametersDto — wynik brewTea()
-         To jest unikalna część projektu!
-         ============================================================ -->
+    <!-- Parametry parzenia (wynik brewTea) -->
     <xs:complexType name="brewingParametersDto">
         <xs:sequence>
             <xs:element name="teaName"         type="xs:string"/>
@@ -93,9 +84,7 @@
         </xs:sequence>
     </xs:complexType>
 
-    <!-- ============================================================
-         KOMUNIKATY: getTeas
-         ============================================================ -->
+    <!-- Żądanie / odpowiedź: getTeas -->
     <xs:element name="getTeasRequest">
         <xs:complexType/>
     </xs:element>
@@ -109,9 +98,7 @@
         </xs:complexType>
     </xs:element>
 
-    <!-- ============================================================
-         KOMUNIKATY: getTeaById
-         ============================================================ -->
+    <!-- Żądanie / odpowiedź: getTeaById -->
     <xs:element name="getTeaByIdRequest">
         <xs:complexType>
             <xs:sequence>
@@ -129,9 +116,7 @@
         </xs:complexType>
     </xs:element>
 
-    <!-- ============================================================
-         KOMUNIKATY: addTea
-         ============================================================ -->
+    <!-- Żądanie / odpowiedź: addTea -->
     <xs:element name="addTeaRequest">
         <xs:complexType>
             <xs:sequence>
@@ -148,9 +133,7 @@
         </xs:complexType>
     </xs:element>
 
-    <!-- ============================================================
-         KOMUNIKATY: brewTea — unikalna metoda
-         ============================================================ -->
+    <!-- Żądanie / odpowiedź: brewTea -->
     <xs:element name="brewTeaRequest">
         <xs:complexType>
             <xs:sequence>
