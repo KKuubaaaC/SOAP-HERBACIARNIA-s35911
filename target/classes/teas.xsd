@@ -1,0 +1,155 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified"
+           xmlns:tns="http://herbaciarnia.example.com/teas"
+           targetNamespace="http://herbaciarnia.example.com/teas">
+
+    <!-- Enum typów herbaty -->
+    <xs:simpleType name="teaTypeEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="GREEN"/>
+            <xs:enumeration value="BLACK"/>
+            <xs:enumeration value="WHITE"/>
+            <xs:enumeration value="OOLONG"/>
+            <xs:enumeration value="HERBAL"/>
+            <xs:enumeration value="PU_ERH"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Model herbaty -->
+    <xs:complexType name="teaDto">
+        <xs:sequence>
+
+            <!-- id opcjonalne -->
+            <xs:element minOccurs="0" name="id" type="xs:decimal"/>
+
+            <!-- nazwa, 2-100 znaków -->
+            <xs:element name="name">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:minLength value="2"/>
+                        <xs:maxLength value="100"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <!-- kraj pochodzenia, 2-60 znaków -->
+            <xs:element name="origin">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:minLength value="2"/>
+                        <xs:maxLength value="60"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <!-- typ herbaty, enum -->
+            <xs:element name="type" type="tns:teaTypeEnum"/>
+
+            <!-- temperatura parzenia, 60-100°C -->
+            <xs:element name="temperatureCelsius">
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="60"/>
+                        <xs:maxInclusive value="100"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <!-- czas parzenia, 30-600s -->
+            <xs:element name="steepingTimeSeconds">
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="30"/>
+                        <xs:maxInclusive value="600"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <!-- notatki, opcjonalne -->
+            <xs:element minOccurs="0" name="notes" type="xs:string"/>
+
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Parametry parzenia (wynik brewTea) -->
+    <xs:complexType name="brewingParametersDto">
+        <xs:sequence>
+            <xs:element name="teaName"         type="xs:string"/>
+            <xs:element name="teaType"         type="tns:teaTypeEnum"/>
+            <xs:element name="temperatureCelsius" type="xs:integer"/>
+            <xs:element name="steepingTimeSeconds" type="xs:integer"/>
+            <xs:element name="waterAmountMl"   type="xs:integer"/>
+            <xs:element name="teaAmountGrams"  type="xs:decimal"/>
+            <xs:element name="brewingAdvice"   type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Żądanie / odpowiedź: getTeas -->
+    <xs:element name="getTeasRequest">
+        <xs:complexType/>
+    </xs:element>
+
+    <xs:element name="getTeasResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="teas" type="tns:teaDto"
+                            minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Żądanie / odpowiedź: getTeaById -->
+    <xs:element name="getTeaByIdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="teaId" type="xs:decimal"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getTeaByIdResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="tea" type="tns:teaDto"
+                            minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Żądanie / odpowiedź: addTea -->
+    <xs:element name="addTeaRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="tea" type="tns:teaDto"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="addTeaResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="teaId" type="xs:decimal"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Żądanie / odpowiedź: brewTea -->
+    <xs:element name="brewTeaRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="teaId" type="xs:decimal"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="brewTeaResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="brewingParameters"
+                            type="tns:brewingParametersDto"
+                            minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
